@@ -1,4 +1,3 @@
-
 from ipaddress import ip_address
 import os, sys, subprocess, pyuac # This is a module that is used to run the command line as an administrator.
 from operator import index
@@ -15,7 +14,7 @@ def main():
     networkRange, IPAddress = ask_network_pref(get_self_IP())
     IP_list = created_IP_list(networkRange, IPAddress)
     created_IP_list(networkRange, IPAddress)
-    print(f"Searching for network devices in the same range as {IPAddress}")
+    print(f"Searching for network devices in the same range as {IPAddress}. Please wait...")
     print(f"Here is a list of all active IPs on your network.")
     print(ping_network_objects(IP_list))
 
@@ -54,7 +53,7 @@ def created_IP_list(networkRange, IPAddress):
         for i in range(1,256):
             networkRange = networkRange[:networkRange.rfind('.') + 1] + ''
             IP_list.append(networkRange + str(i))
-        IP_list.pop(IP_list.index(IPAddress))
+        #IP_list.pop(IP_list.index(IPAddress))
         return IP_list
 
 # created_IP_list = ["192.168.1.13","192.168.1.14"] #test data
@@ -63,15 +62,30 @@ def created_IP_list(networkRange, IPAddress):
 TIMEOUT = 2
 
 def ping_network_objects(IP_list):
-        with open(os.devnull, "wb") as limbo:
+    new_IP_list = []
+    continue_Pinging = True
+    with open(os.devnull, "wb") as limbo:
+        #while continue_Pinging:
             for i in IP_list:
+                firstoctet,secondoctet,thirdoctet,fourthoctet = i.split('.')
+                type(fourthoctet)
+                time.sleep(TIMEOUT)
             #ping_reply = srp1(IP(dst=i)/ICMP(), timeout=TIMEOUT, verbose=0)
-                res = subprocess.Popen(['ping', '-n', '1', '-w', '300', i],
-                    stdout=limbo, stderr=limbo).wait()
-                if res == 0:
-                    print ("ping to", i, "OK")
-                else:
-                    print ("ping to", i, "failed!")
+                # res = subprocess.Popen(['ping', '-n', '1', '-w', '300', i],
+                #     stdout=limbo, stderr=limbo).wait()
+                # if fourthoctet < 255: 
+                #     time.sleep(1)
+                #     if res == 0:
+                #         new_IP_list.append(i)
+                # #wait until the ping is done. May need to change in the future.
+                # else:
+                #     continue_Pinging = False
+        #return new_IP_list
+
+# def find_hardware_info(new_IP_list):
+#         print(f"Here is a list of all active IPs on your network: " + "\n")
+#         print(new_IP_list)
+#         time.sleep(180)
 
 if __name__ == '__main__':
     checkAdmin()
