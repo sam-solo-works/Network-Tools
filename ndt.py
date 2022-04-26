@@ -65,11 +65,9 @@ def ping_network_objects(IP_list):
     new_IP_list = []
     continue_Pinging = True
     with open(os.devnull, "wb") as limbo:
-        #while continue_Pinging:
+        while continue_Pinging:
             for i in IP_list:
                 firstoctet,secondoctet,thirdoctet,fourthoctet = i.split('.')
-                type(fourthoctet)
-                time.sleep(TIMEOUT)
             #ping_reply = srp1(IP(dst=i)/ICMP(), timeout=TIMEOUT, verbose=0)
                 # res = subprocess.Popen(['ping', '-n', '1', '-w', '300', i],
                 #     stdout=limbo, stderr=limbo).wait()
