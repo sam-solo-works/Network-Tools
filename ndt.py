@@ -15,7 +15,7 @@ def main():
     IP_list = created_IP_list(networkRange, IPAddress)
     created_IP_list(networkRange, IPAddress)
     print(f"Searching for network devices in the same range as {IPAddress}. Please wait...")
-    print(f"Here is a list of all active IPs on your network.")
+    #print(f"Here is a list of all active IPs on your network.")
     print(ping_network_objects(IP_list))
 
 #Class Network_Interface():
@@ -63,27 +63,38 @@ TIMEOUT = 2
 
 def ping_network_objects(IP_list):
     new_IP_list = []
-    continue_Pinging = True
     with open(os.devnull, "wb") as limbo:
-        while continue_Pinging:
-            for i in IP_list:
-                firstoctet,secondoctet,thirdoctet,fourthoctet = i.split('.')
+        for i in IP_list:
+            firstoctet,secondoctet,thirdoctet,fourthoctet = i.split('.')
+            fourthoctet = int(fourthoctet)
             #ping_reply = srp1(IP(dst=i)/ICMP(), timeout=TIMEOUT, verbose=0)
-                # res = subprocess.Popen(['ping', '-n', '1', '-w', '300', i],
-                #     stdout=limbo, stderr=limbo).wait()
-                # if fourthoctet < 255: 
-                #     time.sleep(1)
-                #     if res == 0:
-                #         new_IP_list.append(i)
-                # #wait until the ping is done. May need to change in the future.
-                # else:
-                #     continue_Pinging = False
-        #return new_IP_list
+            res = subprocess.Popen(['ping', '-n', '1', '-w', '300', i],
+                stdout=limbo, stderr=limbo).wait()
+            while fourthoctet != 255:
+                if res == 0:
+                    print(i + ' ok!')
+                    new_IP_list.append(i)
+                else:
+                    print(i + ' does not respond.')
+                break
+            #wait until the ping is done. May need to change in the future.
+        return new_IP_list
 
-# def find_hardware_info(new_IP_list):
-#         print(f"Here is a list of all active IPs on your network: " + "\n")
-#         print(new_IP_list)
-#         time.sleep(180)
+def find_hardware_info(new_IP_list):
+        finale = True
+        print(f"Here is a list of all active IPs on your network: " + "\n")
+        print(new_IP_list)
+        end_script = input("Would you like to end the script? (y/n): ")
+        while finale:
+            if end_script == 'n':
+                finale = True
+            elif end_script == 'y':
+                finale = False
+                break
+            else:
+                print("Invalid choice. Please try again.")
+                finale = True
+                break
 
 if __name__ == '__main__':
     checkAdmin()
